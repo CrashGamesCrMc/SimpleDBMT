@@ -14,15 +14,17 @@ import io.github.SebastianDanielFrenz.SimpleDBMT.expandable.ValueManager;
 /**
  * 
  * @since SimpleDB 1.0.0
- *
+ * @version SimpleDBMT 2.0.0
  */
 
 public class DataBaseHandler {
 
 	private ValueManager valueManager;
+	private String dir;
 
 	private List<DataBase> DBs = new ArrayList<DataBase>();
 	private List<String> DBnames = new ArrayList<String>();
+	private List<String> DBpaths = new ArrayList<String>();
 
 	public List<String> getDBnames() {
 		return DBnames;
@@ -40,8 +42,25 @@ public class DataBaseHandler {
 		DBs = dBs;
 	}
 
+	/**
+	 * 
+	 * @param valueManager
+	 * @param dir
+	 * 
+	 * @since SimpleDBMT 2.0.0
+	 */
+	public DataBaseHandler(ValueManager valueManager, String dir) {
+		this.valueManager = valueManager;
+		this.dir = dir;
+	}
+
+	/**
+	 * This constructor should only be used for compatibility. It
+	 */
+	@Deprecated
 	public DataBaseHandler(ValueManager valueManager) {
 		this.valueManager = valueManager;
+		dir = ".";
 	}
 
 	public ValueManager getValueManager() {
@@ -52,8 +71,23 @@ public class DataBaseHandler {
 		this.valueManager = valueManager;
 	}
 
+	/**
+	 * 
+	 * @param path
+	 *            (a | at the beginning indicates a full path [since 2.0.0])
+	 * @throws IOException
+	 * 
+	 * @version SimpleDBMT 2.0.0
+	 */
 	public void addDataBase(String path) throws IOException {
-		String content = new String(Files.readAllBytes(Paths.get(path)));
+		String content;
+
+		if (path.startsWith("|")) {
+			content = new String(Files.readAllBytes(Paths.get(path.substring(1))));
+		} else {
+			content = new String(Files.readAllBytes(Paths.get(dir + "/" + path)));
+		}
+
 		DataBase db = new DataBase(valueManager);
 		db.Parse(content);
 		DBs.add(db);
@@ -86,6 +120,28 @@ public class DataBaseHandler {
 
 	public void setDataBase(String name, DataBase db) {
 		DBs.set(DBnames.indexOf(name), db);
+	}
+
+	public String getDir() {
+		return dir;
+	}
+
+	public void setDir(String dir) {
+		this.dir = dir;
+	}
+
+	/**
+	 * @since SimpleDBMT 2.0.0
+	 */
+	public void saveDBs() {
+		for (int i = 0; i < DBs.size(); i++) {
+			try {
+				saveDataBase(DBnames.get(i), DBpaths.get(0));
+			} catch (FileNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 	}
 
 }
