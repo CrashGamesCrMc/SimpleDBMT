@@ -1,0 +1,1 @@
+<style>table, td, th, tr {border: 3px solid black}</style><table><tr><th>ID</th><th>ID2</th></tr><tr><td>\test</td><td>\test</td></tr><tr><td>\test</td><td>\test4ß</td></tr></table>

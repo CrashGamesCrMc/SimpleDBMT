@@ -1,0 +1,4 @@
+name: SimpleDBMT
+main: io.github.SebastianDanielFrenz.SimpleDBMT.adapter.BukkitAdapter
+version: 2.0.0
+author: SebastianDanielFrenz
