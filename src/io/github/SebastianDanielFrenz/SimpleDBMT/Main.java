@@ -19,6 +19,7 @@ import io.github.SebastianDanielFrenz.SimpleDBMT.query.SimpleStringDataBaseQuery
 
 public class Main {
 
+	@SuppressWarnings("deprecation")
 	public static void main(String[] args) {
 		DataBaseHandler dbh = new DataBaseHandler(new FullValueManager());
 		SimpleStringDataBaseQuery dataBaseQuery = new SimpleStringDataBaseQuery(dbh, new DefaultStringValueManager(),

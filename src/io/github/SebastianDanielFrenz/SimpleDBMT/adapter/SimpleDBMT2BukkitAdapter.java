@@ -21,6 +21,25 @@ public class SimpleDBMT2BukkitAdapter extends JavaPlugin {
 		dbh = new DataBaseHandler(new FullValueManager(), getConfig().getString(cDB_DIR));
 
 		this.getServer().getServicesManager().register(DataBaseHandler.class, dbh, this, ServicePriority.Normal);
+
+		new Thread(new Runnable() {
+
+			@Override
+			public void run() {
+				if (getConfig().getInt(cAUTOSAVE_TIME) == -1) {
+					return;
+				}
+				while (true) {
+					dbh.saveDBs();
+					try {
+						Thread.sleep(1000 * getConfig().getInt(cAUTOSAVE_TIME));
+					} catch (InterruptedException e) {
+						getLogger().info("Detected shutdown!");
+						break;
+					}
+				}
+			}
+		});
 	}
 
 	@Override
@@ -30,6 +49,7 @@ public class SimpleDBMT2BukkitAdapter extends JavaPlugin {
 
 	public void loadConfiguration() {
 		getConfig().addDefault(cDB_DIR, "plugins/SimpleDBMT/DBs");
+		getConfig().addDefault(cAUTOSAVE_TIME, 5);
 
 		getConfig().options().copyDefaults(true);
 
@@ -37,5 +57,7 @@ public class SimpleDBMT2BukkitAdapter extends JavaPlugin {
 	}
 
 	public static final String cDB_DIR = "database.path";
+
+	public static final String cAUTOSAVE_TIME = "autosave_time";
 
 }

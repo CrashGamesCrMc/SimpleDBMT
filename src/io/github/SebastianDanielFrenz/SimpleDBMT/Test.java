@@ -12,12 +12,12 @@ import io.github.SebastianDanielFrenz.SimpleDBMT.query.DefaultComparor;
 import io.github.SebastianDanielFrenz.SimpleDBMT.query.DefaultDataBaseQuery;
 import io.github.SebastianDanielFrenz.SimpleDBMT.query.QueryResult;
 import io.github.SebastianDanielFrenz.SimpleDBMT.query.SearchedValueCondition;
-import io.github.SebastianDanielFrenz.SimpleDBMT.varTypes.DBString;
 import io.github.SebastianDanielFrenz.SimpleDBMT.varTypes.DBVersion;
 import io.github.SebastianDanielFrenz.SimpleDBMT.varTypes.DBvalue;
 
 public class Test {
 
+	@SuppressWarnings("deprecation")
 	public static void main(String[] args) {
 
 		DataBaseHandler dbh = new DataBaseHandler(new FullValueManager());

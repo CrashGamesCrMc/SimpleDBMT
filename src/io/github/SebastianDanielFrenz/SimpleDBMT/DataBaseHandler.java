@@ -84,8 +84,10 @@ public class DataBaseHandler {
 
 		if (path.startsWith("|")) {
 			content = new String(Files.readAllBytes(Paths.get(path.substring(1))));
+			DBpaths.add(path.substring(1));
 		} else {
 			content = new String(Files.readAllBytes(Paths.get(dir + "/" + path)));
+			DBpaths.add(dir + "/" + path);
 		}
 
 		DataBase db = new DataBase(valueManager);
