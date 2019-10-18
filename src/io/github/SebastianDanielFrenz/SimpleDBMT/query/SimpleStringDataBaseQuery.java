@@ -194,7 +194,7 @@ public class SimpleStringDataBaseQuery extends DefaultDataBaseQuery {
 			Delete(args[1], args[2], conditions, comparor);
 		} else if (args[0].equalsIgnoreCase("create")) {
 			if (args[1].equalsIgnoreCase("database")) {
-				getDbh().createDataBase(args[2]);
+				getDbh().createDataBase(args[2], args[2] + ".db");
 			} else if (args[1].equalsIgnoreCase("table")) {
 				getDbh().getDataBase(args[2]).createTable(args[3]);
 			} else if (args[1].equalsIgnoreCase("column")) {
