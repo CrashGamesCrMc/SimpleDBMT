@@ -109,11 +109,34 @@ public class DataBaseHandler {
 		DBs.remove(index);
 	}
 
+	/**
+	 * 
+	 * @param name
+	 * @param path
+	 * 
+	 * @since SimpleDBMT 2.0.0
+	 */
+	public void createDataBase(String name, String path) {
+		DBnames.add(name);
+		DataBase db = new DataBase(valueManager);
+		db.setName(name);
+		DBs.add(db);
+		DBpaths.add(path);
+	}
+
+	/**
+	 * 
+	 * @param name
+	 * 
+	 * @version SimpleDBMT 2.0.0
+	 * @deprecated
+	 */
 	public void createDataBase(String name) {
 		DBnames.add(name);
 		DataBase db = new DataBase(valueManager);
 		db.setName(name);
 		DBs.add(db);
+		DBpaths.add(name + ".db");
 	}
 
 	public DataBase getDataBase(String name) {
@@ -138,7 +161,7 @@ public class DataBaseHandler {
 	public void saveDBs() {
 		for (int i = 0; i < DBs.size(); i++) {
 			try {
-				saveDataBase(DBnames.get(i), DBpaths.get(0));
+				saveDataBase(DBnames.get(i), DBpaths.get(i));
 			} catch (FileNotFoundException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
