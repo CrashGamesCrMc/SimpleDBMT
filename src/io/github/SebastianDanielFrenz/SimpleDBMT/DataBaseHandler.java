@@ -97,7 +97,13 @@ public class DataBaseHandler {
 	}
 
 	public void saveDataBase(String dataBase, String path) throws FileNotFoundException {
-		File file = new File(path);
+		File file;
+
+		if (path.startsWith("|")) {
+			file = new File(path.substring(1));
+		} else {
+			file = new File(dir + "/" + path);
+		}
 		PrintWriter pw = new PrintWriter(file);
 		pw.write(DBs.get(DBnames.indexOf(dataBase)).Save());
 		pw.close();
