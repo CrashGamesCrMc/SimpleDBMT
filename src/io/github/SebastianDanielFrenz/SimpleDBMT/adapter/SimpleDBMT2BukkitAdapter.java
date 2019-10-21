@@ -1,6 +1,9 @@
 package io.github.SebastianDanielFrenz.SimpleDBMT.adapter;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -28,6 +31,12 @@ public class SimpleDBMT2BukkitAdapter extends JavaPlugin {
 	public void onEnable() {
 
 		loadConfiguration();
+
+		try {
+			Files.createDirectories(Paths.get(getConfig().getString(cDB_DIR)));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 
 		dbh = new DataBaseHandler(new FullValueManager(), getConfig().getString(cDB_DIR));
 
