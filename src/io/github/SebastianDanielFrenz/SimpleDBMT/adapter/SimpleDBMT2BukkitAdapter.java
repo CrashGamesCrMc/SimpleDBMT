@@ -107,7 +107,7 @@ public class SimpleDBMT2BukkitAdapter extends JavaPlugin {
 							for (int i = 0; i < db.getTables().size(); i++) {
 								table = db.getTables().get(i);
 								try {
-									table.ToQueryResult().DumpHTMLandFormat(db.getTablenames().get(i));
+									table.ToQueryResult().DumpHTMLandFormat(db.getTablenames().get(i) + ".html");
 								} catch (FileNotFoundException e) {
 									e.printStackTrace();
 									sender.sendMessage("§4Error: " + ExceptionUtils.getStackTrace(e));
