@@ -87,7 +87,7 @@ public class DataBaseHandler {
 			DBpaths.add(path.substring(1));
 		} else {
 			content = new String(Files.readAllBytes(Paths.get(dir + "/" + path)));
-			DBpaths.add(dir + "/" + path);
+			DBpaths.add(path);
 		}
 
 		DataBase db = new DataBase(valueManager);
