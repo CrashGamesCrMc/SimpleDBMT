@@ -57,7 +57,6 @@ public class Table implements Saveable {
 
 	@Override
 	public void Parse(String text) {
-		System.out.println("Table: Parsing: " + text);
 		String[] parts = text.split("\\\\" + CrashedDBsep.sepTableHeadersFromData);
 		String[] rawHeaders = parts[0].split("\\\\" + CrashedDBsep.sepTableHeaders);
 
@@ -96,7 +95,6 @@ public class Table implements Saveable {
 			for (int y = 0; y < columnCount - 1; y++) {
 				try {
 					output += valueManager.Save(values.get(x).get(y));
-					System.out.println("Table-save: " + valueManager.Save(values.get(x).get(y)));
 				} catch (InterpreterIDMissingException e) {
 					e.printStackTrace();
 					return "TABLE_ERROR";

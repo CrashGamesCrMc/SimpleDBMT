@@ -28,11 +28,9 @@ public class FullValueManager extends ValueManager {
 	@Override
 	public DBvalue Interpret(String text) {
 		DBvalue output;
-		System.out.println("FullValueManager: Interpreting " + text);
 		String[] parts = text.split("\\\\" + IDsep);
 		char ID = parts[0].toCharArray()[0];
 		String value = parts[1].replace((char) 0, '\\');
-		System.out.println(value);
 
 		if (ID == CrashedDBsep.ID_DBint) {
 			output = new DBint();
@@ -97,7 +95,6 @@ public class FullValueManager extends ValueManager {
 		output += ID;
 		output += "\\" + IDsep;
 		output += text.Save().replace("\\", "\\\\");
-		System.out.println("FullValueManager: Saving " + output);
 		return output;
 	}
 

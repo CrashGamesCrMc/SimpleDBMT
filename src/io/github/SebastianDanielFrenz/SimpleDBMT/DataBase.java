@@ -52,8 +52,6 @@ public class DataBase implements Saveable {
 	@Override
 	public void Parse(String text) {
 		text = text.replace("\\\\", new String(new char[] { 0 }));
-		
-		System.out.println("Safe: " + text);
 
 		String[] parts = text.split("\\\\" + CrashedDBsep.sepInternalDataBase);
 		String name = parts[0].replace((char) 0, '\\');
