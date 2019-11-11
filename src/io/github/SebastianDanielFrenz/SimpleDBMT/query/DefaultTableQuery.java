@@ -165,7 +165,10 @@ public class DefaultTableQuery extends TableQuery {
 		Table table = getDb().getTable(tableName);
 		boolean possible;
 		int index = 0;
-		for (ArrayList<DBvalue> row : table.getValues()) {
+		ArrayList<DBvalue> row;
+		int removed = 0;
+		while (index < table.getValues().size() - removed) {
+			row = table.getValues().get(index);
 			possible = true;
 			for (SearchedValue condition : conditions) {
 				if (!row.get(table.getHeaders().indexOf(condition.getColumn())).Equals(condition.getValue())) {
@@ -175,6 +178,7 @@ public class DefaultTableQuery extends TableQuery {
 			}
 			if (possible) {
 				table.getValues().remove(index);
+				removed++;
 			} else {
 				index++;
 			}
@@ -187,7 +191,10 @@ public class DefaultTableQuery extends TableQuery {
 		Table table = getDb().getTable(tableName);
 		boolean possible;
 		int index = 0;
-		for (ArrayList<DBvalue> row : table.getValues()) {
+		ArrayList<DBvalue> row;
+		int removed = 0;
+		while (index < table.getValues().size() - removed) {
+			row = table.getValues().get(index);
 			possible = true;
 			for (SearchedValueCondition condition : conditions) {
 				if (condition.isInternal()) {
@@ -206,6 +213,7 @@ public class DefaultTableQuery extends TableQuery {
 			}
 			if (possible) {
 				table.getValues().remove(index);
+				removed++;
 			} else {
 				index++;
 			}

@@ -7,6 +7,6 @@ package io.github.SebastianDanielFrenz.SimpleDBMT.error;
  */
 
 @SuppressWarnings("serial")
-public class InterpreterIDMissingException extends Exception {
+public class InterpreterIDMissingException extends RuntimeException {
 
 }

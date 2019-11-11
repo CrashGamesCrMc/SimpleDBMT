@@ -6,7 +6,7 @@ package io.github.SebastianDanielFrenz.SimpleDBMT.error;
  *
  */
 @SuppressWarnings("serial")
-public class ComparorOperatorNotSupportedException extends Exception {
+public class ComparorOperatorNotSupportedException extends RuntimeException {
 
 	private String message;
 
