@@ -1,18 +1,19 @@
 package io.github.SebastianDanielFrenz.SimpleDBMT;
 
 import java.io.FileNotFoundException;
-import java.io.IOException;
+import java.math.BigInteger;
 import java.util.ArrayList;
 
-import io.github.SebastianDanielFrenz.SimpleDBMT.error.QueryComparorMissingException;
 import io.github.SebastianDanielFrenz.SimpleDBMT.expandable.FullValueManager;
+import io.github.SebastianDanielFrenz.SimpleDBMT.query.ColumnOrigin;
 import io.github.SebastianDanielFrenz.SimpleDBMT.query.Comparor;
 import io.github.SebastianDanielFrenz.SimpleDBMT.query.DataBaseQuery;
 import io.github.SebastianDanielFrenz.SimpleDBMT.query.DefaultComparor;
 import io.github.SebastianDanielFrenz.SimpleDBMT.query.DefaultDataBaseQuery;
+import io.github.SebastianDanielFrenz.SimpleDBMT.query.QueryJoinCondition;
 import io.github.SebastianDanielFrenz.SimpleDBMT.query.QueryResult;
-import io.github.SebastianDanielFrenz.SimpleDBMT.query.SearchedValueCondition;
-import io.github.SebastianDanielFrenz.SimpleDBMT.varTypes.DBVersion;
+import io.github.SebastianDanielFrenz.SimpleDBMT.varTypes.DBBigInteger;
+import io.github.SebastianDanielFrenz.SimpleDBMT.varTypes.DBString;
 import io.github.SebastianDanielFrenz.SimpleDBMT.varTypes.DBvalue;
 
 public class Test {
@@ -24,51 +25,86 @@ public class Test {
 
 		// test of previous data
 
-		try {
-			dbh.addDataBase("main.db");
-			dbh.getDataBase("main").getTable("users").ToQueryResult().DumpHTMLandFormat("main.db.html");
-			dbh.unloadDataBase("main");
-		} catch (IOException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
+		/*
+		 * try { dbh.addDataBase("main.db");
+		 * dbh.getDataBase("main").getTable("users").ToQueryResult().
+		 * DumpHTMLandFormat("main.db.html"); dbh.unloadDataBase("main"); }
+		 * catch (Exception e1) { // TODO Auto-generated catch block
+		 * e1.printStackTrace(); }
+		 */
 
 		// text with new data
 
 		dbh.createDataBase("main");
 		DataBase main = dbh.getDataBase("main");
-		main.createTable("users");
-		Table users = main.getTable("users");
-		users.addColumn("ID");
-		users.addColumn("ID2");
+		/*
+		 * main.createTable("users"); Table users = main.getTable("users");
+		 * users.addColumn("ID"); users.addColumn("ID2"); ArrayList<DBvalue> row
+		 * = new ArrayList<DBvalue>(); row.add(new DBVersion("1.0.0.0"));
+		 * row.add(new DBVersion("1.0.0.0")); users.addRow(row);
+		 * 
+		 * row = new ArrayList<DBvalue>(); row.add(new DBVersion("1.0.0.1"));
+		 * row.add(new DBVersion("1.0.0.0")); users.addRow(row);
+		 * 
+		 * row = new ArrayList<DBvalue>(); row.add(new DBVersion("1.0.0.0"));
+		 * row.add(new DBVersion("1.0.0.1")); users.addRow(row);
+		 */
+
+		main.createTable("players");
+		main.createTable("playerclasses");
+		Table players = main.getTable("players");
+		players.addColumn("UUID");
+		players.addColumn("class");
+		Table playerclasses = main.getTable("playerclasses");
+		playerclasses.addColumn("UUID");
+		playerclasses.addColumn("class");
+		playerclasses.addColumn("xp");
 		ArrayList<DBvalue> row = new ArrayList<DBvalue>();
-		row.add(new DBVersion("1.0.0.0"));
-		row.add(new DBVersion("1.0.0.0"));
-		users.addRow(row);
+
+		row.add(new DBString("UUID1"));
+		row.add(new DBString("priest"));
+		players.addRow(row);
 
 		row = new ArrayList<DBvalue>();
-		row.add(new DBVersion("1.0.0.1"));
-		row.add(new DBVersion("1.0.0.0"));
-		users.addRow(row);
+		row.add(new DBString("UUID2"));
+		row.add(new DBString("assasin"));
+		players.addRow(row);
 
 		row = new ArrayList<DBvalue>();
-		row.add(new DBVersion("1.0.0.0"));
-		row.add(new DBVersion("1.0.0.1"));
-		users.addRow(row);
+		row.add(new DBString("UUID1"));
+		row.add(new DBString("assasin"));
+		row.add(new DBBigInteger(new BigInteger("10000")));
+		playerclasses.addRow(row);
+
+		row = new ArrayList<DBvalue>();
+		row.add(new DBString("UUID2"));
+		row.add(new DBString("priest"));
+		row.add(new DBBigInteger(new BigInteger("90")));
+		playerclasses.addRow(row);
+
+		row = new ArrayList<DBvalue>();
+		row.add(new DBString("UUID1"));
+		row.add(new DBString("priest"));
+		row.add(new DBBigInteger(new BigInteger("143")));
+		playerclasses.addRow(row);
+
+		row = new ArrayList<DBvalue>();
+		row.add(new DBString("UUID2"));
+		row.add(new DBString("assasin"));
+		row.add(new DBBigInteger(new BigInteger("23456")));
+		playerclasses.addRow(row);
 
 		DataBaseQuery query = new DefaultDataBaseQuery(dbh);
 		Comparor comparor = new DefaultComparor();
-		try {
-			QueryResult result = query.Run("main", "users", new String[] { "ID", "ID2" },
-					new SearchedValueCondition[] { new SearchedValueCondition("ID", Comparor.SMALLER_EQUALS, "ID2") },
-					comparor);
+		QueryResult result = query
+				.InnerJoin("main", "players", "playerclasses", new String[] { "xp" },
+						new ColumnOrigin[] { new ColumnOrigin(2, "xp") }, new QueryJoinCondition[] {
+								new QueryJoinCondition("UUID", "UUID"), new QueryJoinCondition("class", "class") })
+				.ToQueryResult();
 
-			try {
-				result.DumpHTMLandFormat("test.html");
-			} catch (FileNotFoundException e) {
-				e.printStackTrace();
-			}
-		} catch (QueryComparorMissingException e) {
+		try {
+			result.DumpHTMLandFormat("test.html");
+		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
 

@@ -1,6 +1,7 @@
 package io.github.SebastianDanielFrenz.SimpleDBMT.expandable;
 
 import io.github.SebastianDanielFrenz.SimpleDBMT.error.InterpreterIDMissingException;
+import io.github.SebastianDanielFrenz.SimpleDBMT.varTypes.DBBigInteger;
 import io.github.SebastianDanielFrenz.SimpleDBMT.varTypes.DBString;
 import io.github.SebastianDanielFrenz.SimpleDBMT.varTypes.DBVersion;
 import io.github.SebastianDanielFrenz.SimpleDBMT.varTypes.DBboolean;
@@ -84,8 +85,11 @@ public class FullValueManager extends ValueManager {
 			return CrashedDBsep.ID_DBshort;
 		} else if (value instanceof DBVersion) {
 			return CrashedDBsep.ID_DBVersion;
+		} else if (value instanceof DBBigInteger) {
+			return CrashedDBsep.ID_DBBigInteger;
 		} else {
-			throw new InterpreterIDMissingException();
+
+			throw new InterpreterIDMissingException(value.getClass().toGenericString());
 		}
 	}
 

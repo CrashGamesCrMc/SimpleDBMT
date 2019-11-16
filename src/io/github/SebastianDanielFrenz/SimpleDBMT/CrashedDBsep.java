@@ -36,6 +36,7 @@ public class CrashedDBsep {
 	public static final char ID_DBlong = 6;
 	public static final char ID_DBshort = 7;
 	public static final char ID_DBVersion = 8;
+	public static final char ID_DBBigInteger = 10;
 
 	public static List<DataBase> ToList(DataBase[] array) {
 		List<DataBase> list = new ArrayList<DataBase>();
