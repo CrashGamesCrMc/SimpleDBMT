@@ -6,6 +6,10 @@ public class DBBigInteger implements DBvalue {
 
 	private BigInteger value;
 
+	public DBBigInteger(BigInteger value) {
+		this.value = value;
+	}
+
 	@Override
 	public void Parse(String text) {
 		value = new BigInteger(text);

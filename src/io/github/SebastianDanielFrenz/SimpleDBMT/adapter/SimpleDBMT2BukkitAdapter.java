@@ -4,12 +4,15 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.craftbukkit.libs.org.apache.commons.lang3.exception.ExceptionUtils;
+import org.bukkit.entity.Zombie;
 import org.bukkit.plugin.ServicePriority;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -20,7 +23,7 @@ import io.github.SebastianDanielFrenz.SimpleDBMT.expandable.FullValueManager;
 
 /**
  * 
- * @since SimpleDBMT 2.0.0
+ * @since SimpleDBMT 2.0.2
  *
  */
 public class SimpleDBMT2BukkitAdapter extends JavaPlugin {
@@ -42,6 +45,8 @@ public class SimpleDBMT2BukkitAdapter extends JavaPlugin {
 
 		this.getServer().getServicesManager().register(DataBaseHandler.class, dbh, this, ServicePriority.Normal);
 
+		List<AutoSaveEventListener> autoSaveEventListeners = new ArrayList<AutoSaveEventListener>();
+
 		new Thread(new Runnable() {
 
 			@Override
@@ -50,6 +55,10 @@ public class SimpleDBMT2BukkitAdapter extends JavaPlugin {
 					return;
 				}
 				while (true) {
+					for (AutoSaveEventListener listener : autoSaveEventListeners) {
+						listener.run();
+					}
+
 					dbh.saveDBs();
 					try {
 						Thread.sleep(1000 * getConfig().getInt(cAUTOSAVE_TIME));
