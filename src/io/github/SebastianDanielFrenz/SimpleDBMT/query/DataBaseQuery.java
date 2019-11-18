@@ -10,6 +10,7 @@ import java.util.ArrayList;
 
 import io.github.SebastianDanielFrenz.SimpleDBMT.error.ComparorOperatorNotSupportedException;
 import io.github.SebastianDanielFrenz.SimpleDBMT.error.QueryComparorMissingException;
+import io.github.SebastianDanielFrenz.SimpleDBMT.expandable.ValueManager;
 import io.github.SebastianDanielFrenz.SimpleDBMT.varTypes.DBString;
 import io.github.SebastianDanielFrenz.SimpleDBMT.varTypes.DBvalue;
 
@@ -118,5 +119,69 @@ public abstract class DataBaseQuery {
 
 	public abstract Table FullJoin(String dataBaseName, String tableName1, String tableName2, String[] columnNames,
 			ColumnOrigin[] columnOrigins, QueryJoinCondition[] conditions);
+
+	/**
+	 * @since SimpleDBMT 2.1.0
+	 * 
+	 * @param valueManager
+	 * @param tableName1
+	 * @param tableName2
+	 * @param columnNames
+	 * @param columnOrigins
+	 * @param joinConditions
+	 * @param conditions
+	 * @return
+	 */
+	public abstract Table LeftJoin(String dataBaseName, String tableName1, String tableName2, String[] columnNames,
+			ColumnOrigin[] columnOrigins, QueryJoinCondition[] conditions, SearchedValue[] conditions2,
+			int[] condition2Origins);
+
+	/**
+	 * @since SimpleDBMT 2.1.0
+	 * 
+	 * @param valueManager
+	 * @param tableName1
+	 * @param tableName2
+	 * @param columnNames
+	 * @param columnOrigins
+	 * @param joinConditions
+	 * @param conditions
+	 * @return
+	 */
+	public abstract Table RightJoin(String dataBaseName, String tableName1, String tableName2, String[] columnNames,
+			ColumnOrigin[] columnOrigins, QueryJoinCondition[] conditions, SearchedValue[] conditions2,
+			int[] condition2Origins);
+
+	/**
+	 * @since SimpleDBMT 2.1.0
+	 * 
+	 * @param valueManager
+	 * @param tableName1
+	 * @param tableName2
+	 * @param columnNames
+	 * @param columnOrigins
+	 * @param joinConditions
+	 * @param conditions
+	 * @return
+	 */
+	public abstract Table InnerJoin(String dataBaseName, String tableName1, String tableName2, String[] columnNames,
+			ColumnOrigin[] columnOrigins, QueryJoinCondition[] conditions, SearchedValue[] conditions2,
+			int[] condition2Origins);
+
+	/**
+	 * @since SimpleDBMT 2.1.0
+	 * 
+	 * @param valueManager
+	 * @param tableName1
+	 * @param tableName2
+	 * @param columnNames
+	 * @param columnOrigins
+	 * @param joinConditions
+	 * @param conditions
+	 * @return
+	 */
+	public abstract Table FullJoin(String dataBaseName, String tableName1, String tableName2, String[] columnNames,
+			ColumnOrigin[] columnOrigins, QueryJoinCondition[] conditions, SearchedValue[] conditions2,
+			int[] condition2Origins);
 
 }

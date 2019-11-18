@@ -80,4 +80,36 @@ public class DefaultDataBaseQuery extends DataBaseQuery {
 				tableName1, tableName2, columnNames, columnOrigins, conditions);
 	}
 
+	@Override
+	public Table LeftJoin(String dataBaseName, String tableName1, String tableName2, String[] columnNames,
+			ColumnOrigin[] columnOrigins, QueryJoinCondition[] conditions, SearchedValue[] conditions2,
+			int[] conditions2Origins) {
+		return new DefaultTableQuery(getDbh().getDataBase(dataBaseName)).LeftJoin(getDbh().getValueManager(),
+				tableName1, tableName2, columnNames, columnOrigins, conditions, conditions2, conditions2Origins);
+	}
+
+	@Override
+	public Table RightJoin(String dataBaseName, String tableName1, String tableName2, String[] columnNames,
+			ColumnOrigin[] columnOrigins, QueryJoinCondition[] conditions, SearchedValue[] conditions2,
+			int[] conditions2Origins) {
+		return new DefaultTableQuery(getDbh().getDataBase(dataBaseName)).RightJoin(getDbh().getValueManager(),
+				tableName1, tableName2, columnNames, columnOrigins, conditions, conditions2, conditions2Origins);
+	}
+
+	@Override
+	public Table InnerJoin(String dataBaseName, String tableName1, String tableName2, String[] columnNames,
+			ColumnOrigin[] columnOrigins, QueryJoinCondition[] conditions, SearchedValue[] conditions2,
+			int[] conditions2Origins) {
+		return new DefaultTableQuery(getDbh().getDataBase(dataBaseName)).InnerJoin(getDbh().getValueManager(),
+				tableName1, tableName2, columnNames, columnOrigins, conditions, conditions2, conditions2Origins);
+	}
+
+	@Override
+	public Table FullJoin(String dataBaseName, String tableName1, String tableName2, String[] columnNames,
+			ColumnOrigin[] columnOrigins, QueryJoinCondition[] conditions, SearchedValue[] conditions2,
+			int[] conditions2Origins) {
+		return new DefaultTableQuery(getDbh().getDataBase(dataBaseName)).FullJoin(getDbh().getValueManager(),
+				tableName1, tableName2, columnNames, columnOrigins, conditions, conditions2, conditions2Origins);
+	}
+
 }
