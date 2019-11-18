@@ -10,7 +10,6 @@ import java.util.ArrayList;
 
 import io.github.SebastianDanielFrenz.SimpleDBMT.error.ComparorOperatorNotSupportedException;
 import io.github.SebastianDanielFrenz.SimpleDBMT.error.QueryComparorMissingException;
-import io.github.SebastianDanielFrenz.SimpleDBMT.expandable.ValueManager;
 import io.github.SebastianDanielFrenz.SimpleDBMT.varTypes.DBString;
 import io.github.SebastianDanielFrenz.SimpleDBMT.varTypes.DBvalue;
 
