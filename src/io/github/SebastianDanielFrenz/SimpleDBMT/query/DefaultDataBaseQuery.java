@@ -80,6 +80,18 @@ public class DefaultDataBaseQuery extends DataBaseQuery {
 				tableName1, tableName2, columnNames, columnOrigins, conditions);
 	}
 
+	/**
+	 * @since SimpleDBMT 2.1.0
+	 * 
+	 * @param valueManager
+	 * @param tableName1
+	 * @param tableName2
+	 * @param columnNames
+	 * @param columnOrigins
+	 * @param joinConditions
+	 * @param conditions
+	 * @return
+	 */
 	@Override
 	public Table LeftJoin(String dataBaseName, String tableName1, String tableName2, String[] columnNames,
 			ColumnOrigin[] columnOrigins, QueryJoinCondition[] conditions, SearchedValue[] conditions2,
@@ -88,6 +100,18 @@ public class DefaultDataBaseQuery extends DataBaseQuery {
 				tableName1, tableName2, columnNames, columnOrigins, conditions, conditions2, conditions2Origins);
 	}
 
+	/**
+	 * @since SimpleDBMT 2.1.0
+	 * 
+	 * @param valueManager
+	 * @param tableName1
+	 * @param tableName2
+	 * @param columnNames
+	 * @param columnOrigins
+	 * @param joinConditions
+	 * @param conditions
+	 * @return
+	 */
 	@Override
 	public Table RightJoin(String dataBaseName, String tableName1, String tableName2, String[] columnNames,
 			ColumnOrigin[] columnOrigins, QueryJoinCondition[] conditions, SearchedValue[] conditions2,
@@ -96,6 +120,18 @@ public class DefaultDataBaseQuery extends DataBaseQuery {
 				tableName1, tableName2, columnNames, columnOrigins, conditions, conditions2, conditions2Origins);
 	}
 
+	/**
+	 * @since SimpleDBMT 2.1.0
+	 * 
+	 * @param valueManager
+	 * @param tableName1
+	 * @param tableName2
+	 * @param columnNames
+	 * @param columnOrigins
+	 * @param joinConditions
+	 * @param conditions
+	 * @return
+	 */
 	@Override
 	public Table InnerJoin(String dataBaseName, String tableName1, String tableName2, String[] columnNames,
 			ColumnOrigin[] columnOrigins, QueryJoinCondition[] conditions, SearchedValue[] conditions2,
@@ -104,6 +140,18 @@ public class DefaultDataBaseQuery extends DataBaseQuery {
 				tableName1, tableName2, columnNames, columnOrigins, conditions, conditions2, conditions2Origins);
 	}
 
+	/**
+	 * @since SimpleDBMT 2.1.0
+	 * 
+	 * @param valueManager
+	 * @param tableName1
+	 * @param tableName2
+	 * @param columnNames
+	 * @param columnOrigins
+	 * @param joinConditions
+	 * @param conditions
+	 * @return
+	 */
 	@Override
 	public Table FullJoin(String dataBaseName, String tableName1, String tableName2, String[] columnNames,
 			ColumnOrigin[] columnOrigins, QueryJoinCondition[] conditions, SearchedValue[] conditions2,
