@@ -472,4 +472,341 @@ public class DefaultTableQuery extends TableQuery {
 		return table;
 	}
 
+	@Override
+	public Table LeftJoin(ValueManager valueManager, String tableName1, String tableName2, String[] columnNames,
+			ColumnOrigin[] columnOrigins, QueryJoinCondition[] conditions, SearchedValue[] conditions2,
+			int[] conditions2Origins) {
+
+		Table table = new Table(valueManager);
+		Table table1 = getDb().getTable(tableName1);
+		Table table2 = getDb().getTable(tableName2);
+		for (String columnName : columnNames) {
+			table.addColumn(columnName);
+		}
+		boolean possible;
+		ArrayList<DBvalue> newRow;
+		// left join stuff - start
+		boolean[] usedIndexes = new boolean[table1.getRowCount()];
+		int row1Counter = 0;
+		// left join stuff - end
+		for (ArrayList<DBvalue> row1 : table1.getValues()) {
+			for (ArrayList<DBvalue> row2 : table2.getValues()) {
+				possible = true;
+				for (QueryJoinCondition condition : conditions) {
+					if (!row1.get(table1.getHeaders().indexOf(condition.getColumnName1()))
+							.Equals(row2.get(table2.getHeaders().indexOf(condition.getColumnName2())))) {
+						possible = false;
+						break;
+					}
+				}
+				if (possible) {
+					// 2nd condition
+					for (int i = 0; i < conditions2.length; i++) {
+						if (conditions2Origins[i] == 1) {
+							if (!row1.get(table1.getHeaders().indexOf(conditions2[i].getColumn()))
+									.Equals(conditions2[i].getValue())) {
+								possible = false;
+								break;
+							}
+						} else {
+							if (!row2.get(table2.getHeaders().indexOf(conditions2[i].getColumn()))
+									.Equals(conditions2[i].getValue())) {
+								possible = false;
+								break;
+							}
+						}
+					}
+					if (possible) {
+						// 2nd condition end
+
+						// left join stuff - start
+						usedIndexes[row1Counter] = true;
+						// left join stuff - end
+						newRow = new ArrayList<DBvalue>();
+						for (ColumnOrigin columnOrigin : columnOrigins) {
+							if (columnOrigin.getTableID() == 1) {
+								newRow.add(row1.get(table1.getHeaders().indexOf(columnOrigin.getColumnName())));
+							} else if (columnOrigin.getTableID() == 2) {
+								newRow.add(row2.get(table2.getHeaders().indexOf(columnOrigin.getColumnName())));
+							}
+						}
+						table.addRow(newRow);
+					}
+				}
+			}
+			row1Counter++;
+		}
+		// left join stuff - start
+		int index = 0;
+		for (boolean usedIndex : usedIndexes) {
+			if (!usedIndex) {
+				newRow = new ArrayList<DBvalue>();
+				for (ColumnOrigin columnOrigin : columnOrigins) {
+					if (columnOrigin.getTableID() == 1) {
+						newRow.add(table1.getRow(index).get(table1.getHeaders().indexOf(columnOrigin.getColumnName())));
+					} else if (columnOrigin.getTableID() == 2) {
+						newRow.add(new DBString(CrashedDBstock.VALUE_MISSING));
+					}
+				}
+				table.addRow(newRow);
+			}
+			index++;
+		}
+		// left join stuff - end
+		return table;
+	}
+
+	@Override
+	public Table RightJoin(ValueManager valueManager, String tableName1, String tableName2, String[] columnNames,
+			ColumnOrigin[] columnOrigins, QueryJoinCondition[] conditions, SearchedValue[] conditions2,
+			int[] conditions2Origins) {
+
+		Table table = new Table(valueManager);
+		Table table1 = getDb().getTable(tableName1);
+		Table table2 = getDb().getTable(tableName2);
+		for (String columnName : columnNames) {
+			table.addColumn(columnName);
+		}
+		boolean possible;
+		ArrayList<DBvalue> newRow;
+		// right join stuff - start
+		boolean[] usedIndexesRight = new boolean[table2.getRowCount()];
+		int row2Counter;
+		// right join stuff - end
+
+		for (ArrayList<DBvalue> row1 : table1.getValues()) {
+			row2Counter = 0;
+			for (ArrayList<DBvalue> row2 : table2.getValues()) {
+				possible = true;
+				for (QueryJoinCondition condition : conditions) {
+					if (!row1.get(table1.getHeaders().indexOf(condition.getColumnName1()))
+							.Equals(row2.get(table2.getHeaders().indexOf(condition.getColumnName2())))) {
+						possible = false;
+						break;
+					}
+				}
+				if (possible) {
+					// 2nd condition
+					for (int i = 0; i < conditions2.length; i++) {
+						if (conditions2Origins[i] == 1) {
+							if (!row1.get(table1.getHeaders().indexOf(conditions2[i].getColumn()))
+									.Equals(conditions2[i].getValue())) {
+								possible = false;
+								break;
+							}
+						} else {
+							if (!row2.get(table2.getHeaders().indexOf(conditions2[i].getColumn()))
+									.Equals(conditions2[i].getValue())) {
+								possible = false;
+								break;
+							}
+						}
+					}
+					if (possible) {
+						// 2nd condition end
+						// right join stuff - start
+						usedIndexesRight[row2Counter] = true;
+						// right join stuff - end
+						newRow = new ArrayList<DBvalue>();
+						for (ColumnOrigin columnOrigin : columnOrigins) {
+							if (columnOrigin.getTableID() == 1) {
+								newRow.add(row1.get(table1.getHeaders().indexOf(columnOrigin.getColumnName())));
+							} else if (columnOrigin.getTableID() == 2) {
+								newRow.add(row2.get(table2.getHeaders().indexOf(columnOrigin.getColumnName())));
+							}
+						}
+						table.addRow(newRow);
+					}
+				}
+				row2Counter++;
+			}
+		}
+		// right join stuff - start
+		int index = 0;
+		for (boolean usedIndexRight : usedIndexesRight) {
+			if (!usedIndexRight) {
+				newRow = new ArrayList<DBvalue>();
+				for (ColumnOrigin columnOrigin : columnOrigins) {
+					if (columnOrigin.getTableID() == 2) {
+						newRow.add(table2.getRow(index).get(table2.getHeaders().indexOf(columnOrigin.getColumnName())));
+					} else if (columnOrigin.getTableID() == 1) {
+						newRow.add(new DBString(CrashedDBstock.VALUE_MISSING));
+					}
+				}
+				table.addRow(newRow);
+			}
+			index++;
+		}
+		// right join stuff - end
+		return table;
+	}
+
+	@Override
+	public Table InnerJoin(ValueManager valueManager, String tableName1, String tableName2, String[] columnNames,
+			ColumnOrigin[] columnOrigins, QueryJoinCondition[] conditions, SearchedValue[] conditions2,
+			int[] conditions2Origins) {
+
+		Table table = new Table(valueManager);
+		Table table1 = getDb().getTable(tableName1);
+		Table table2 = getDb().getTable(tableName2);
+		for (String columnName : columnNames) {
+			table.addColumn(columnName);
+		}
+		boolean possible;
+		ArrayList<DBvalue> newRow;
+		for (ArrayList<DBvalue> row1 : table1.getValues()) {
+			for (ArrayList<DBvalue> row2 : table2.getValues()) {
+				possible = true;
+				for (QueryJoinCondition condition : conditions) {
+					if (!row1.get(table1.getHeaders().indexOf(condition.getColumnName1()))
+							.Equals(row2.get(table2.getHeaders().indexOf(condition.getColumnName2())))) {
+						possible = false;
+						break;
+					}
+				}
+				if (possible) {
+					// 2nd condition
+					for (int i = 0; i < conditions2.length; i++) {
+						if (conditions2Origins[i] == 1) {
+							if (!row1.get(table1.getHeaders().indexOf(conditions2[i].getColumn()))
+									.Equals(conditions2[i].getValue())) {
+								possible = false;
+								break;
+							}
+						} else {
+							if (!row2.get(table2.getHeaders().indexOf(conditions2[i].getColumn()))
+									.Equals(conditions2[i].getValue())) {
+								possible = false;
+								break;
+							}
+						}
+					}
+					if (possible) {
+						// 2nd condition end
+						newRow = new ArrayList<DBvalue>();
+						for (ColumnOrigin columnOrigin : columnOrigins) {
+							if (columnOrigin.getTableID() == 1) {
+								newRow.add(row1.get(table1.getHeaders().indexOf(columnOrigin.getColumnName())));
+							} else if (columnOrigin.getTableID() == 2) {
+								newRow.add(row2.get(table2.getHeaders().indexOf(columnOrigin.getColumnName())));
+							}
+						}
+						table.addRow(newRow);
+					}
+				}
+			}
+		}
+		return table;
+	}
+
+	@Override
+	public Table FullJoin(ValueManager valueManager, String tableName1, String tableName2, String[] columnNames,
+			ColumnOrigin[] columnOrigins, QueryJoinCondition[] conditions, SearchedValue[] conditions2,
+			int[] conditions2Origins) {
+
+		Table table = new Table(valueManager);
+		Table table1 = getDb().getTable(tableName1);
+		Table table2 = getDb().getTable(tableName2);
+		for (String columnName : columnNames) {
+			table.addColumn(columnName);
+		}
+		boolean possible;
+		ArrayList<DBvalue> newRow;
+		// left join stuff - start
+		boolean[] usedIndexes = new boolean[table1.getRowCount()];
+		int row1Counter = 0;
+		// left join stuff - end
+		// right join stuff - start
+		boolean[] usedIndexesRight = new boolean[table2.getRowCount()];
+		int row2Counter;
+		// right join stuff - end
+
+		for (ArrayList<DBvalue> row1 : table1.getValues()) {
+			row2Counter = 0;
+			for (ArrayList<DBvalue> row2 : table2.getValues()) {
+				possible = true;
+				for (QueryJoinCondition condition : conditions) {
+					if (!row1.get(table1.getHeaders().indexOf(condition.getColumnName1()))
+							.Equals(row2.get(table2.getHeaders().indexOf(condition.getColumnName2())))) {
+						possible = false;
+						break;
+					}
+				}
+				if (possible) {
+					// 2nd condition
+					for (int i = 0; i < conditions2.length; i++) {
+						if (conditions2Origins[i] == 1) {
+							if (!row1.get(table1.getHeaders().indexOf(conditions2[i].getColumn()))
+									.Equals(conditions2[i].getValue())) {
+								possible = false;
+								break;
+							}
+						} else {
+							if (!row2.get(table2.getHeaders().indexOf(conditions2[i].getColumn()))
+									.Equals(conditions2[i].getValue())) {
+								possible = false;
+								break;
+							}
+						}
+					}
+					if (possible) {
+						// 2nd condition end
+						// left join stuff - start
+						usedIndexes[row1Counter] = true;
+						// left join stuff - end
+						// right join stuff - start
+						usedIndexesRight[row2Counter] = true;
+						// right join stuff - end
+						newRow = new ArrayList<DBvalue>();
+						for (ColumnOrigin columnOrigin : columnOrigins) {
+							if (columnOrigin.getTableID() == 1) {
+								newRow.add(row1.get(table1.getHeaders().indexOf(columnOrigin.getColumnName())));
+							} else if (columnOrigin.getTableID() == 2) {
+								newRow.add(row2.get(table2.getHeaders().indexOf(columnOrigin.getColumnName())));
+							}
+						}
+						table.addRow(newRow);
+					}
+				}
+				row2Counter++;
+			}
+			row1Counter++;
+		}
+		// left join stuff - start
+		int index = 0;
+		for (boolean usedIndex : usedIndexes) {
+			if (!usedIndex) {
+				newRow = new ArrayList<DBvalue>();
+				for (ColumnOrigin columnOrigin : columnOrigins) {
+					if (columnOrigin.getTableID() == 1) {
+						newRow.add(table1.getRow(index).get(table1.getHeaders().indexOf(columnOrigin.getColumnName())));
+					} else if (columnOrigin.getTableID() == 2) {
+						newRow.add(new DBString(CrashedDBstock.VALUE_MISSING));
+					}
+				}
+				table.addRow(newRow);
+			}
+			index++;
+		}
+		// left join stuff - end
+		// right join stuff - start
+		index = 0;
+		for (boolean usedIndexRight : usedIndexesRight) {
+			if (!usedIndexRight) {
+				newRow = new ArrayList<DBvalue>();
+				for (ColumnOrigin columnOrigin : columnOrigins) {
+					if (columnOrigin.getTableID() == 2) {
+						newRow.add(table2.getRow(index).get(table2.getHeaders().indexOf(columnOrigin.getColumnName())));
+					} else if (columnOrigin.getTableID() == 1) {
+						newRow.add(new DBString(CrashedDBstock.VALUE_MISSING));
+					}
+				}
+				table.addRow(newRow);
+			}
+			index++;
+		}
+		// right join stuff - end
+		return table;
+	}
+
 }

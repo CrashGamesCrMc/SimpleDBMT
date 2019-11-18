@@ -107,4 +107,68 @@ public abstract class TableQuery {
 	public abstract Table FullJoin(ValueManager valueManager, String tableName1, String tableName2,
 			String[] columnNames, ColumnOrigin[] columnOrigins, QueryJoinCondition[] conditions);
 
+	/**
+	 * @since SimpleDBMT 2.1.0
+	 * 
+	 * @param valueManager
+	 * @param tableName1
+	 * @param tableName2
+	 * @param columnNames
+	 * @param columnOrigins
+	 * @param joinConditions
+	 * @param conditions
+	 * @return
+	 */
+	public abstract Table LeftJoin(ValueManager valueManager, String tableName1, String tableName2,
+			String[] columnNames, ColumnOrigin[] columnOrigins, QueryJoinCondition[] conditions,
+			SearchedValue[] conditions2, int[] condition2Origins);
+
+	/**
+	 * @since SimpleDBMT 2.1.0
+	 * 
+	 * @param valueManager
+	 * @param tableName1
+	 * @param tableName2
+	 * @param columnNames
+	 * @param columnOrigins
+	 * @param joinConditions
+	 * @param conditions
+	 * @return
+	 */
+	public abstract Table RightJoin(ValueManager valueManager, String tableName1, String tableName2,
+			String[] columnNames, ColumnOrigin[] columnOrigins, QueryJoinCondition[] conditions,
+			SearchedValue[] conditions2, int[] condition2Origins);
+
+	/**
+	 * @since SimpleDBMT 2.1.0
+	 * 
+	 * @param valueManager
+	 * @param tableName1
+	 * @param tableName2
+	 * @param columnNames
+	 * @param columnOrigins
+	 * @param joinConditions
+	 * @param conditions
+	 * @return
+	 */
+	public abstract Table InnerJoin(ValueManager valueManager, String tableName1, String tableName2,
+			String[] columnNames, ColumnOrigin[] columnOrigins, QueryJoinCondition[] conditions,
+			SearchedValue[] conditions2, int[] condition2Origins);
+
+	/**
+	 * @since SimpleDBMT 2.1.0
+	 * 
+	 * @param valueManager
+	 * @param tableName1
+	 * @param tableName2
+	 * @param columnNames
+	 * @param columnOrigins
+	 * @param joinConditions
+	 * @param conditions
+	 * @return
+	 */
+	public abstract Table FullJoin(ValueManager valueManager, String tableName1, String tableName2,
+			String[] columnNames, ColumnOrigin[] columnOrigins, QueryJoinCondition[] conditions,
+			SearchedValue[] conditions2, int[] condition2Origins);
+
 }
