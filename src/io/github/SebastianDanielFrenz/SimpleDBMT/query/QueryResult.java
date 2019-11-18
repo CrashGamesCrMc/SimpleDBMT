@@ -69,4 +69,8 @@ public class QueryResult {
 		return output;
 	}
 
+	public boolean isEmpty() {
+		return rows.size() == 0;
+	}
+
 }

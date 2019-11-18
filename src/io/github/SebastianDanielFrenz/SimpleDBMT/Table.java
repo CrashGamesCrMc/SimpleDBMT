@@ -172,4 +172,8 @@ public class Table implements Saveable {
 		return output;
 	}
 
+	public boolean isEmpty() {
+		return rowCount == 0;
+	}
+
 }
