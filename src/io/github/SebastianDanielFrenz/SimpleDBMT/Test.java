@@ -18,7 +18,7 @@ import io.github.SebastianDanielFrenz.SimpleDBMT.varTypes.DBvalue;
 
 public class Test {
 
-	@SuppressWarnings("deprecation")
+	@SuppressWarnings({ "deprecation", "unused" })
 	public static void main(String[] args) {
 
 		DataBaseHandler dbh = new DataBaseHandler(new FullValueManager());
