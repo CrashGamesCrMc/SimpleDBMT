@@ -12,7 +12,6 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.craftbukkit.libs.org.apache.commons.lang3.exception.ExceptionUtils;
-import org.bukkit.entity.Zombie;
 import org.bukkit.plugin.ServicePriority;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -20,6 +19,7 @@ import io.github.SebastianDanielFrenz.SimpleDBMT.DataBase;
 import io.github.SebastianDanielFrenz.SimpleDBMT.DataBaseHandler;
 import io.github.SebastianDanielFrenz.SimpleDBMT.Table;
 import io.github.SebastianDanielFrenz.SimpleDBMT.expandable.FullValueManager;
+import io.github.SebastianDanielFrenz.SimpleDBMT.varTypes.DBvalue;
 
 /**
  * 
@@ -77,6 +77,13 @@ public class SimpleDBMT2BukkitAdapter extends JavaPlugin {
 			public final String[] permission_help = new String[] { "SimpleDBMT.help" };
 			public final String[] permission_dump = new String[] { "SimpleDBMT.dump" };
 			public final String[] permission_save = new String[] { "SimpleDBMT.save" };
+			public final String[] permission_list_database = new String[] { "SimpleDBMT.list.database",
+					"SimpleDBMT.list.*" };
+			public final String[] permission_list_table = new String[] { "SimpleDBMT.list.table", "SimpleDBMT.list.*" };
+			public final String[] permission_show_database = new String[] { "SimpleDBMT.show.database",
+					"SimpleDBMT.show.*" };
+			public final String[] permission_show_table = new String[] { "SimpleDBMT.show.table", "SimpleDBMT.show.*" };
+			public final String[] permission_show_all = new String[] { "SimpleDBMT.show.all", "SimpleDBMT.show.*" };
 
 			public boolean hasPermission(CommandSender sender, String[] perms) {
 				if (sender.isOp() || sender instanceof ConsoleCommandSender || sender.hasPermission("SimpleDBMT.*")) {
@@ -133,6 +140,69 @@ public class SimpleDBMT2BukkitAdapter extends JavaPlugin {
 						sender.sendMessage(prefix + "§aDone!");
 					}
 					return true;
+				} else if (args[0].equalsIgnoreCase("list")) {
+					if (args.length == 1) {
+						// list DBs
+						if (hasPermission(sender, permission_list_database)) {
+							sender.sendMessage(prefix + "List of data bases:");
+							for (DataBase db : dbh.getDBs()) {
+								sender.sendMessage(prefix + " - " + db.getName());
+								for (String table : db.getTablenames()) {
+									sender.sendMessage(prefix + "     - " + table);
+								}
+							}
+						}
+					} else {
+						if (hasPermission(sender, permission_list_table)) {
+							sender.sendMessage(prefix + "List of tables in " + args[1] + ":");
+							for (String table : dbh.getDataBase(args[1]).getTablenames()) {
+								sender.sendMessage(prefix + " - " + table);
+							}
+						}
+					}
+				} else if (args[0].equalsIgnoreCase("show")) {
+					if (args.length == 1) {
+						if (hasPermission(sender, permission_show_all)) {
+							sender.sendMessage(prefix + "Showing every table's content:");
+							for (DataBase db : dbh.getDBs()) {
+								sender.sendMessage(prefix + "DB: " + db.getName());
+								for (String tablename : db.getTablenames()) {
+									sender.sendMessage(prefix + "    Table: " + tablename);
+									String headerText = "|";
+									for (String header : db.getTable(tablename).getHeaders()) {
+										headerText += header + "|";
+									}
+									sender.sendMessage(headerText);
+
+									for (List<DBvalue> row : db.getTable(tablename).getValues()) {
+										String tmp = "|";
+										for (DBvalue value : row) {
+											tmp += value.Display() + "|";
+										}
+										sender.sendMessage(tmp);
+									}
+								}
+							}
+						}
+					} else if (args.length == 3) {
+						if (hasPermission(sender, permission_show_table)) {
+							DataBase db = dbh.getDataBase(args[1]);
+							String tablename = args[2];
+							String headerText = "|";
+							for (String header : db.getTable(tablename).getHeaders()) {
+								headerText += header + "|";
+							}
+							sender.sendMessage(headerText);
+
+							for (List<DBvalue> row : db.getTable(tablename).getValues()) {
+								String tmp = "|";
+								for (DBvalue value : row) {
+									tmp += value.Display() + "|";
+								}
+								sender.sendMessage(tmp);
+							}
+						}
+					}
 				}
 				return false;
 			}
