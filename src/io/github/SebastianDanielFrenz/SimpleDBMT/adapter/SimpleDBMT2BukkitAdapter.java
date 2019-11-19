@@ -184,8 +184,32 @@ public class SimpleDBMT2BukkitAdapter extends JavaPlugin {
 								}
 							}
 						}
-					} else if (args.length == 3) {
+					} else if (args.length == 2) {
+						if (hasPermission(sender, permission_show_database)) {
+							sender.sendMessage(prefix + "Showing contents of the " + args[1] + ":");
+							DataBase db = dbh.getDataBase(args[1]);
+
+							for (String tablename : db.getTablenames()) {
+								sender.sendMessage(prefix + "Table: " + tablename);
+								String headerText = "|";
+								for (String header : db.getTable(tablename).getHeaders()) {
+									headerText += header + "|";
+								}
+								sender.sendMessage(headerText);
+
+								for (List<DBvalue> row : db.getTable(tablename).getValues()) {
+									String tmp = "|";
+									for (DBvalue value : row) {
+										tmp += value.Display() + "|";
+									}
+									sender.sendMessage(tmp);
+								}
+							}
+						}
+					} else {
 						if (hasPermission(sender, permission_show_table)) {
+							sender.sendMessage(
+									prefix + "Showing contents of the table " + args[2] + " in " + args[1] + ":");
 							DataBase db = dbh.getDataBase(args[1]);
 							String tablename = args[2];
 							String headerText = "|";
