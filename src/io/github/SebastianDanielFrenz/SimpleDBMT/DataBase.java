@@ -4,18 +4,37 @@ import java.util.ArrayList;
 import java.util.List;
 
 import io.github.SebastianDanielFrenz.SimpleDBMT.expandable.ValueManager;
+import io.github.SebastianDanielFrenz.SimpleDBMT.registry.RegistryValueManager;
+import io.github.SebastianDanielFrenz.SimpleDBMT.registry.TypeRegistryTableValueManager;
 import io.github.SebastianDanielFrenz.SimpleDBMT.varTypes.Saveable;
 
 /**
  * 
  * @since SimpleDB 1.0.0
- * @version SimpleDB 1.2.4
+ * @version SimpleDB 2.2.0
  *
  */
 
 public class DataBase implements Saveable {
 
+	/**
+	 * If you can, use DataBase(RegistryValueManager valueManager) instead. This
+	 * constructor will not comply with newer features.<br>
+	 * Using a type registry is advised.
+	 * 
+	 * @param valueManager
+	 */
+	@Deprecated
 	public DataBase(ValueManager valueManager) {
+		this.valueManager = valueManager;
+	}
+
+	/**
+	 * 
+	 * @param reg
+	 * @since SimpleDBMT 2.2.0
+	 */
+	public DataBase(RegistryValueManager valueManager) {
 		this.valueManager = valueManager;
 	}
 
@@ -49,6 +68,9 @@ public class DataBase implements Saveable {
 		this.tablenames = tablenames;
 	}
 
+	/**
+	 * @version SimpleDBMT 2.2.0
+	 */
 	@Override
 	public void Parse(String text) {
 		text = text.replace("\\\\", new String(new char[] { 0 }));
@@ -59,9 +81,19 @@ public class DataBase implements Saveable {
 		String rawTables = parts[2];
 		this.name = name;
 		Table table;
-		for (String rawTable : rawTables.split("\\\\" + CrashedDBsep.sepTables)) {
+
+		String[] rawTableDataStrings = rawTables.split("\\\\" + CrashedDBsep.sepTables);
+		boolean hasRegistry = valueManager instanceof RegistryValueManager;
+
+		if (hasRegistry) {
+			table = new Table(new TypeRegistryTableValueManager());
+			table.Parse(rawTableDataStrings[0]);
+			((RegistryValueManager) valueManager).getTypeRegistry().fromTable(table);
+		}
+
+		for (int i = hasRegistry ? 1 : 0; i < rawTableDataStrings.length; i++) {
 			table = new Table(valueManager);
-			table.Parse(rawTable);
+			table.Parse(rawTableDataStrings[i]);
 			tables.add(table);
 		}
 		for (String tableName : rawTableNames.split("\\\\" + CrashedDBsep.sepTableNames)) {
@@ -69,8 +101,15 @@ public class DataBase implements Saveable {
 		}
 	}
 
+	/**
+	 * @version SimpleDBMT 2.2.0
+	 */
 	@Override
 	public String Save() {
+		if (valueManager instanceof RegistryValueManager) {
+			addTable("__sys_typereg", ((RegistryValueManager) valueManager).getTypeRegistry().toTable());
+		}
+
 		String output = "";
 		output += name;
 		output += "\\" + CrashedDBsep.sepInternalDataBase;

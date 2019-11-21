@@ -14,7 +14,7 @@ import io.github.SebastianDanielFrenz.SimpleDBMT.CrashedDBsep;
 /**
  * 
  * @since SimpleDB 1.0.0
- * @version SimpleDB 2.0.0
+ * @version SimpleDB 2.2.0
  *
  */
 
@@ -66,15 +66,6 @@ public class DefaultValueManager extends ValueManager {
 		}
 	}
 
-	@Override
-	public String Save(Saveable text, char ID) {
-		String output = "";
-		output += ID;
-		output += "\\" + IDsep;
-		output += text.Save().replace("\\", "\\\\");
-		return output;
-	}
-
 	public char getIDsep() {
 		return IDsep;
 	}
@@ -84,8 +75,12 @@ public class DefaultValueManager extends ValueManager {
 	}
 
 	@Override
-	public String Save(DBvalue dBvalue) throws InterpreterIDMissingException {
-		return Save(dBvalue, GetID(dBvalue));
+	public String Save(DBvalue value) {
+		String output = "";
+		output += GetID(value);
+		output += "\\" + IDsep;
+		output += value.Save().replace("\\", "\\\\");
+		return output;
 	}
 
 }

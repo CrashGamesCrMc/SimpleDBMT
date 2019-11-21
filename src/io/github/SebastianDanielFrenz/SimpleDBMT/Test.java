@@ -12,45 +12,60 @@ import io.github.SebastianDanielFrenz.SimpleDBMT.query.DefaultComparor;
 import io.github.SebastianDanielFrenz.SimpleDBMT.query.DefaultDataBaseQuery;
 import io.github.SebastianDanielFrenz.SimpleDBMT.query.QueryJoinCondition;
 import io.github.SebastianDanielFrenz.SimpleDBMT.query.QueryResult;
+import io.github.SebastianDanielFrenz.SimpleDBMT.query.SearchedValue;
+import io.github.SebastianDanielFrenz.SimpleDBMT.registry.RegistryValueManager;
 import io.github.SebastianDanielFrenz.SimpleDBMT.varTypes.DBBigInteger;
 import io.github.SebastianDanielFrenz.SimpleDBMT.varTypes.DBString;
+import io.github.SebastianDanielFrenz.SimpleDBMT.varTypes.DBVersion;
 import io.github.SebastianDanielFrenz.SimpleDBMT.varTypes.DBvalue;
 
+@SuppressWarnings("unused")
 public class Test {
 
-	@SuppressWarnings({ "deprecation", "unused" })
+	@SuppressWarnings({ "deprecation" })
 	public static void main(String[] args) {
 
-		DataBaseHandler dbh = new DataBaseHandler(new FullValueManager());
+		//DataBaseHandler dbh = new DataBaseHandler(new FullValueManager());
+		DataBaseHandler dbh = new DataBaseHandler(new RegistryValueManager(CrashedDBstock.getDefaultTypeRegistry()));
 
 		// test of previous data
 
-		/*
-		 * try { dbh.addDataBase("main.db");
-		 * dbh.getDataBase("main").getTable("users").ToQueryResult().
-		 * DumpHTMLandFormat("main.db.html"); dbh.unloadDataBase("main"); }
-		 * catch (Exception e1) { // TODO Auto-generated catch block
-		 * e1.printStackTrace(); }
-		 */
+		
+		try {
+			dbh.addDataBase("main.db");
+			dbh.getDataBase("main").getTable("users").ToQueryResult().DumpHTMLandFormat("main.db.html");
+			dbh.unloadDataBase("main");
+		} catch (Exception e1) {
+			e1.printStackTrace();
+		}
+		 
 
 		// text with new data
 
 		dbh.createDataBase("main");
 		DataBase main = dbh.getDataBase("main");
-		/*
-		 * main.createTable("users"); Table users = main.getTable("users");
-		 * users.addColumn("ID"); users.addColumn("ID2"); ArrayList<DBvalue> row
-		 * = new ArrayList<DBvalue>(); row.add(new DBVersion("1.0.0.0"));
-		 * row.add(new DBVersion("1.0.0.0")); users.addRow(row);
-		 * 
-		 * row = new ArrayList<DBvalue>(); row.add(new DBVersion("1.0.0.1"));
-		 * row.add(new DBVersion("1.0.0.0")); users.addRow(row);
-		 * 
-		 * row = new ArrayList<DBvalue>(); row.add(new DBVersion("1.0.0.0"));
-		 * row.add(new DBVersion("1.0.0.1")); users.addRow(row);
-		 */
+		
+		// type registry
+		
+		main.addTable("__SimpleDBMT_typereg",
+				((RegistryValueManager) main.getValueManager()).getTypeRegistry().toTable());
 
-		main.createTable("players");
+		
+		main.createTable("users"); Table users = main.getTable("users");
+		 users.addColumn("ID"); users.addColumn("ID2"); ArrayList<DBvalue> row
+		 = new ArrayList<DBvalue>(); row.add(new DBVersion("1.0.0.0"));
+		 row.add(new DBVersion("1.0.0.0")); users.addRow(row);
+		  
+		 row = new ArrayList<DBvalue>(); row.add(new DBVersion("1.0.0.1"));
+		 row.add(new DBVersion("1.0.0.0")); users.addRow(row);
+		 
+		 row = new ArrayList<DBvalue>(); row.add(new DBVersion("1.0.0.0"));
+		 row.add(new DBVersion("1.0.0.1")); users.addRow(row);
+		 
+		 DataBaseQuery query = new DefaultDataBaseQuery(dbh);
+		 QueryResult result = query.Run("main", "users", new String[]{"ID","ID2"},new SearchedValue[]{});
+
+		/*main.createTable("players");
 		main.createTable("playerclasses");
 		Table players = main.getTable("players");
 		players.addColumn("UUID");
@@ -100,8 +115,9 @@ public class Test {
 				.InnerJoin("main", "players", "playerclasses", new String[] { "xp" },
 						new ColumnOrigin[] { new ColumnOrigin(2, "xp") }, new QueryJoinCondition[] {
 								new QueryJoinCondition("UUID", "UUID"), new QueryJoinCondition("class", "class") })
-				.ToQueryResult();
+				.ToQueryResult();*/
 
+		
 		try {
 			result.DumpHTMLandFormat("test.html");
 		} catch (FileNotFoundException e) {
@@ -111,7 +127,6 @@ public class Test {
 		try {
 			dbh.saveDataBase("main", "main.db");
 		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
