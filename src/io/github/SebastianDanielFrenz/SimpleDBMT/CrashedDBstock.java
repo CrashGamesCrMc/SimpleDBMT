@@ -41,4 +41,17 @@ public class CrashedDBstock {
 		return typeRegistry;
 	}
 
+	public static void addDefaultTypes(TypeRegistry typeRegistry) {
+		typeRegistry.register(DBBigInteger.class);
+		typeRegistry.register(DBboolean.class);
+		typeRegistry.register(DBbyte.class);
+		typeRegistry.register(DBdouble.class);
+		typeRegistry.register(DBfloat.class);
+		typeRegistry.register(DBint.class);
+		typeRegistry.register(DBlong.class);
+		typeRegistry.register(DBshort.class);
+		typeRegistry.register(DBString.class);
+		typeRegistry.register(DBVersion.class);
+	}
+
 }

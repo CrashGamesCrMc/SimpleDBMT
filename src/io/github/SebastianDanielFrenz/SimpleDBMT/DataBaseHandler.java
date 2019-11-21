@@ -10,11 +10,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import io.github.SebastianDanielFrenz.SimpleDBMT.expandable.ValueManager;
+import io.github.SebastianDanielFrenz.SimpleDBMT.registry.RegistryValueManager;
+import io.github.SebastianDanielFrenz.SimpleDBMT.registry.TypeRegistry;
 
 /**
  * 
  * @since SimpleDB 1.0.0
- * @version SimpleDBMT 2.0.0
+ * @version SimpleDBMT 2.2.0
  */
 
 public class DataBaseHandler {
@@ -43,19 +45,34 @@ public class DataBaseHandler {
 	}
 
 	/**
+	 * Please use DataBaseHandler(RegistryValueManager valueManager, String dir)
+	 * instead if possible.
 	 * 
 	 * @param valueManager
 	 * @param dir
 	 * 
 	 * @since SimpleDBMT 2.0.0
 	 */
+	@Deprecated
 	public DataBaseHandler(ValueManager valueManager, String dir) {
 		this.valueManager = valueManager;
 		this.dir = dir;
 	}
 
 	/**
-	 * This constructor should only be used for compatibility. It
+	 * @since SimpleDBMT 2.2.0
+	 * 
+	 * @param valueManager
+	 * @param dir
+	 */
+	public DataBaseHandler(RegistryValueManager valueManager, String dir) {
+		this.valueManager = valueManager;
+		this.dir = dir;
+	}
+
+	/**
+	 * This constructor should only be used for compatibility. It will set the
+	 * path of any databases to the execution path of the JVM.
 	 */
 	@Deprecated
 	public DataBaseHandler(ValueManager valueManager) {
@@ -90,10 +107,45 @@ public class DataBaseHandler {
 			DBpaths.add(path);
 		}
 
+		@SuppressWarnings("deprecation")
 		DataBase db = new DataBase(valueManager);
 		db.Parse(content);
 		DBs.add(db);
 		DBnames.add(db.getName());
+	}
+
+	/**
+	 * @since SimpleDBMT 2.2.0
+	 * @param path
+	 * @param valueManager
+	 * @throws IOException
+	 */
+	public void addDataBase(String path, ValueManager valueManager) throws IOException {
+		String content;
+
+		if (path.startsWith("|")) {
+			content = new String(Files.readAllBytes(Paths.get(path.substring(1))));
+			DBpaths.add(path.substring(1));
+		} else {
+			content = new String(Files.readAllBytes(Paths.get(dir + "/" + path)));
+			DBpaths.add(path);
+		}
+
+		@SuppressWarnings("deprecation")
+		DataBase db = new DataBase(valueManager);
+		db.Parse(content);
+		DBs.add(db);
+		DBnames.add(db.getName());
+	}
+
+	/**
+	 * @since SimpleDBMT 2.2.0
+	 * @param path
+	 * @param reg
+	 * @throws IOException
+	 */
+	public void addDataBase(String path, TypeRegistry reg) throws IOException {
+		addDataBase(path, new RegistryValueManager(reg));
 	}
 
 	public void saveDataBase(String dataBase, String path) throws FileNotFoundException {
@@ -124,7 +176,25 @@ public class DataBaseHandler {
 	 */
 	public void createDataBase(String name, String path) {
 		DBnames.add(name);
+		@SuppressWarnings("deprecation")
 		DataBase db = new DataBase(valueManager);
+		db.setName(name);
+		DBs.add(db);
+		DBpaths.add(path);
+	}
+
+	/**
+	 * This method creates a new database with a new value manager constructed
+	 * using the given type registry.
+	 * 
+	 * @since SimpleDBMT 2.2.0
+	 * @param name
+	 * @param path
+	 * @param typeRegistry
+	 */
+	public void createDataBase(String name, String path, TypeRegistry typeRegistry) {
+		DBnames.add(name);
+		DataBase db = new DataBase(new RegistryValueManager(typeRegistry));
 		db.setName(name);
 		DBs.add(db);
 		DBpaths.add(path);
@@ -169,7 +239,6 @@ public class DataBaseHandler {
 			try {
 				saveDataBase(DBnames.get(i), DBpaths.get(i));
 			} catch (FileNotFoundException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}

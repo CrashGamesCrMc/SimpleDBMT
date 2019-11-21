@@ -15,15 +15,18 @@ import org.bukkit.craftbukkit.libs.org.apache.commons.lang3.exception.ExceptionU
 import org.bukkit.plugin.ServicePriority;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import io.github.SebastianDanielFrenz.SimpleDBMT.CrashedDBstock;
 import io.github.SebastianDanielFrenz.SimpleDBMT.DataBase;
 import io.github.SebastianDanielFrenz.SimpleDBMT.DataBaseHandler;
 import io.github.SebastianDanielFrenz.SimpleDBMT.Table;
 import io.github.SebastianDanielFrenz.SimpleDBMT.expandable.FullValueManager;
+import io.github.SebastianDanielFrenz.SimpleDBMT.registry.RegistryValueManager;
 import io.github.SebastianDanielFrenz.SimpleDBMT.varTypes.DBvalue;
 
 /**
  * 
  * @since SimpleDBMT 2.0.2
+ * @version SimpleDBMT 2.2.0
  *
  */
 public class SimpleDBMT2BukkitAdapter extends JavaPlugin {
@@ -41,7 +44,8 @@ public class SimpleDBMT2BukkitAdapter extends JavaPlugin {
 			e.printStackTrace();
 		}
 
-		dbh = new DataBaseHandler(new FullValueManager(), getConfig().getString(cDB_DIR));
+		dbh = new DataBaseHandler(new RegistryValueManager(CrashedDBstock.getDefaultTypeRegistry()),
+				getConfig().getString(cDB_DIR));
 
 		this.getServer().getServicesManager().register(DataBaseHandler.class, dbh, this, ServicePriority.Normal);
 
