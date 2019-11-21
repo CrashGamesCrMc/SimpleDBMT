@@ -111,6 +111,9 @@ public class SimpleDBMT2BukkitAdapter extends JavaPlugin {
 						if (hasPermission(sender, permission_save)) {
 							sender.sendMessage(prefix + "/simpledbmt save");
 						}
+						if (hasPermission(sender, permission_list_database)) {
+							sender.sendMessage(prefix + "/simpledebmt list <database>");
+						}
 					}
 					return true;
 				} else if (args[0].equalsIgnoreCase("dump")) {
