@@ -107,7 +107,6 @@ public class DataBase implements Saveable {
 	@Override
 	public String Save() {
 		if (valueManager instanceof RegistryValueManager) {
-			addTable("__sys_typereg", ((RegistryValueManager) valueManager).getTypeRegistry().toTable());
 			tables.add(0, ((RegistryValueManager) valueManager).getTypeRegistry().toTable());
 			tablenames.add(0, "__sys_typereg");
 		}
