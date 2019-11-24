@@ -19,7 +19,6 @@ import io.github.SebastianDanielFrenz.SimpleDBMT.CrashedDBstock;
 import io.github.SebastianDanielFrenz.SimpleDBMT.DataBase;
 import io.github.SebastianDanielFrenz.SimpleDBMT.DataBaseHandler;
 import io.github.SebastianDanielFrenz.SimpleDBMT.Table;
-import io.github.SebastianDanielFrenz.SimpleDBMT.expandable.FullValueManager;
 import io.github.SebastianDanielFrenz.SimpleDBMT.registry.RegistryValueManager;
 import io.github.SebastianDanielFrenz.SimpleDBMT.varTypes.DBvalue;
 
