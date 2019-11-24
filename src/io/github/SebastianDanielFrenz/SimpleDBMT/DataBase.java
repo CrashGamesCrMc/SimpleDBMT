@@ -134,6 +134,9 @@ public class DataBase implements Saveable {
 		if (tables.size() != 0) {
 			output += tables.get(tables.size() - 1).Save();
 		}
+
+		deleteTable("__sys_typereg");
+
 		return output;
 	}
 
