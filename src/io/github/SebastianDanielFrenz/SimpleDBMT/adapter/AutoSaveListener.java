@@ -1,7 +1,7 @@
 package io.github.SebastianDanielFrenz.SimpleDBMT.adapter;
 
-public interface AutoSaveEventListener {
+public interface AutoSaveListener {
 
-	public void run();
+	public void onAutoSave();
 
 }

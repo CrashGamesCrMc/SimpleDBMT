@@ -48,7 +48,8 @@ public class SimpleDBMT2BukkitAdapter extends JavaPlugin {
 
 		this.getServer().getServicesManager().register(DataBaseHandler.class, dbh, this, ServicePriority.Normal);
 
-		List<AutoSaveEventListener> autoSaveEventListeners = new ArrayList<AutoSaveEventListener>();
+		List<AutoSaveListener> autoSaveListeners = new ArrayList<AutoSaveListener>();
+		List<PostAutoSaveListener> postAutoSaveListeners = new ArrayList<PostAutoSaveListener>();
 
 		new Thread(new Runnable() {
 
@@ -58,11 +59,16 @@ public class SimpleDBMT2BukkitAdapter extends JavaPlugin {
 					return;
 				}
 				while (true) {
-					for (AutoSaveEventListener listener : autoSaveEventListeners) {
-						listener.run();
+					for (AutoSaveListener listener : autoSaveListeners) {
+						listener.onAutoSave();
 					}
 
 					dbh.saveDBs();
+
+					for (PostAutoSaveListener listener : postAutoSaveListeners) {
+						listener.onPostAutoSave();
+					}
+
 					try {
 						Thread.sleep(1000 * getConfig().getInt(cAUTOSAVE_TIME));
 					} catch (InterruptedException e) {
