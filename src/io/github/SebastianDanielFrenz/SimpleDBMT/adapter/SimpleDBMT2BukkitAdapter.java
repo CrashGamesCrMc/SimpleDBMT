@@ -149,6 +149,7 @@ public class SimpleDBMT2BukkitAdapter extends JavaPlugin {
 				} else if (args[0].equalsIgnoreCase("save")) {
 					if (hasPermission(sender, permission_save)) {
 						dbh.saveDBs();
+						
 						sender.sendMessage(prefix + "§aDone!");
 					}
 					return true;

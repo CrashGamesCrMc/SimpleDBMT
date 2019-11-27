@@ -2,8 +2,12 @@ package io.github.SebastianDanielFrenz.SimpleDBMT;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -158,7 +162,15 @@ public class DataBaseHandler {
 		} else {
 			file = new File(dir + "/" + path);
 		}
-		FileUtils.writeStringToFile(file, DBs.get(DBnames.indexOf(dataBase)).Save(), "utf-8");
+
+		String value = DBs.get(DBnames.indexOf(dataBase)).Save();
+
+		OutputStreamWriter osw = new OutputStreamWriter(new FileOutputStream(file), StandardCharsets.UTF_16);
+		osw.write(value);
+
+		osw.flush();
+
+		osw.close();
 	}
 
 	public void unloadDataBase(String dataBase) {
