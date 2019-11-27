@@ -9,6 +9,8 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.bukkit.craftbukkit.libs.org.apache.commons.io.FileUtils;
+
 import io.github.SebastianDanielFrenz.SimpleDBMT.expandable.ValueManager;
 import io.github.SebastianDanielFrenz.SimpleDBMT.registry.RegistryValueManager;
 import io.github.SebastianDanielFrenz.SimpleDBMT.registry.TypeRegistry;
@@ -148,7 +150,7 @@ public class DataBaseHandler {
 		addDataBase(path, new RegistryValueManager(reg));
 	}
 
-	public void saveDataBase(String dataBase, String path) throws FileNotFoundException {
+	public void saveDataBase(String dataBase, String path) throws IOException {
 		File file;
 
 		if (path.startsWith("|")) {
@@ -156,9 +158,7 @@ public class DataBaseHandler {
 		} else {
 			file = new File(dir + "/" + path);
 		}
-		PrintWriter pw = new PrintWriter(file);
-		pw.write(DBs.get(DBnames.indexOf(dataBase)).Save());
-		pw.close();
+		FileUtils.writeStringToFile(file, DBs.get(DBnames.indexOf(dataBase)).Save(), "utf-8");
 	}
 
 	public void unloadDataBase(String dataBase) {
@@ -238,7 +238,7 @@ public class DataBaseHandler {
 		for (int i = 0; i < DBs.size(); i++) {
 			try {
 				saveDataBase(DBnames.get(i), DBpaths.get(i));
-			} catch (FileNotFoundException e) {
+			} catch (IOException e) {
 				e.printStackTrace();
 			}
 		}

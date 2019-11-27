@@ -1,6 +1,7 @@
 package io.github.SebastianDanielFrenz.SimpleDBMT;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.math.BigInteger;
 import java.util.ArrayList;
 
@@ -126,7 +127,7 @@ public class Test {
 
 		try {
 			dbh.saveDataBase("main", "main.db");
-		} catch (FileNotFoundException e) {
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
