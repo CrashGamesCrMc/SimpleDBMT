@@ -25,12 +25,14 @@ import io.github.SebastianDanielFrenz.SimpleDBMT.varTypes.DBvalue;
 /**
  * 
  * @since SimpleDBMT 2.0.2
- * @version SimpleDBMT 2.2.0
+ * @version SimpleDBMT 2.3.0
  *
  */
 public class SimpleDBMT2BukkitAdapter extends JavaPlugin {
 
 	public static DataBaseHandler dbh;
+	private static List<AutoSaveListener> autoSaveListeners;
+	private static List<PostAutoSaveListener> postAutoSaveListeners;
 
 	@Override
 	public void onEnable() {
@@ -48,8 +50,8 @@ public class SimpleDBMT2BukkitAdapter extends JavaPlugin {
 
 		this.getServer().getServicesManager().register(DataBaseHandler.class, dbh, this, ServicePriority.Normal);
 
-		List<AutoSaveListener> autoSaveListeners = new ArrayList<AutoSaveListener>();
-		List<PostAutoSaveListener> postAutoSaveListeners = new ArrayList<PostAutoSaveListener>();
+		autoSaveListeners = new ArrayList<AutoSaveListener>();
+		postAutoSaveListeners = new ArrayList<PostAutoSaveListener>();
 
 		new Thread(new Runnable() {
 
@@ -148,8 +150,17 @@ public class SimpleDBMT2BukkitAdapter extends JavaPlugin {
 					return true;
 				} else if (args[0].equalsIgnoreCase("save")) {
 					if (hasPermission(sender, permission_save)) {
+
+						for (AutoSaveListener listener : autoSaveListeners) {
+							listener.onAutoSave();
+						}
+
 						dbh.saveDBs();
-						
+
+						for (PostAutoSaveListener listener : postAutoSaveListeners) {
+							listener.onPostAutoSave();
+						}
+
 						sender.sendMessage(prefix + "§aDone!");
 					}
 					return true;
@@ -249,7 +260,17 @@ public class SimpleDBMT2BukkitAdapter extends JavaPlugin {
 	@Override
 	public void onDisable() {
 		getLogger().info("Saving databases...");
+
+		for (AutoSaveListener listener : autoSaveListeners) {
+			listener.onAutoSave();
+		}
+
 		dbh.saveDBs();
+
+		for (PostAutoSaveListener listener : postAutoSaveListeners) {
+			listener.onPostAutoSave();
+		}
+
 		getLogger().info("Saved databases!");
 
 	}
@@ -261,6 +282,14 @@ public class SimpleDBMT2BukkitAdapter extends JavaPlugin {
 		getConfig().options().copyDefaults(true);
 
 		saveConfig();
+	}
+
+	public static void registerAutoSaveListener(AutoSaveListener listener) {
+		autoSaveListeners.add(listener);
+	}
+
+	public static void registerPostAutoSaveListener(PostAutoSaveListener listener) {
+		postAutoSaveListeners.add(listener);
 	}
 
 	public static final String cDB_DIR = "database.path";
